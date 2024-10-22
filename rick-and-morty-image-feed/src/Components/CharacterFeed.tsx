@@ -55,21 +55,25 @@ const CharacterFeed: React.FC<{ episodeId: number | null }> = ({ episodeId }) =>
   const indexOfFirstCharacter = indexOfLastCharacter - charactersPerPage;
   const currentCharacters = characters.slice(indexOfFirstCharacter, indexOfLastCharacter);
 
-  if (loading) {
-    return <div>Loading characters...</div>;
-  }
+  const renderSkeletons = () => {
+    return Array.from({ length: charactersPerPage }).map((_, index) => (
+      <div key={index} className="flex flex-col justify-center items-center bg-gray-300 p-2 rounded-sm animate-pulse">
+        <div className="h-[6rem] w-full bg-gray-400 rounded"></div>
+        <div className="mt-2 h-4 w-3/4 bg-gray-400 rounded"></div>
+      </div>
+    ));
+  };
 
   return (
     <div className='h-5/6 w-3/4'>
       <div className="h-full w-full rounded-md">
-      
-        <div className="text-xl mb-1 p-2 rounded-sm bg-[#D3EE98]  text-[#347928] ">
-          {characters.length} Characters in Episode "{episodeName}"
+        <div className="text-xl mb-1 p-2 rounded-sm bg-[#D3EE98] text-[#347928]">
+          {loading ? 'Loading Episode...' : `${characters.length} Characters in Episode "${episodeName}"`}
         </div>
-        
+
         <div className="grid grid-cols-5 gap-1">
-          {currentCharacters.map((character) => (
-            <div key={character.id} className="flex flex-col justify-center items-center bg-[#D3EE98] p-1 rounded-sm">
+          {loading ? renderSkeletons() : currentCharacters.map((character) => (
+            <div key={character.id} className="flex flex-col justify-start items-center bg-[#D3EE98] p-1 rounded-sm">
               <img 
                 src={character.image}
                 alt={character.name}
@@ -84,7 +88,7 @@ const CharacterFeed: React.FC<{ episodeId: number | null }> = ({ episodeId }) =>
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="px-4 bg-[#72BF78] text-[#FEFF9F] rounded-l-lg hover:bg-[#D3EE98] hover:text-[#72BF78]"
+            className="px-4 bg-[#00712D] text-[#DBD3D3] rounded-l-lg hover:bg-[#DBD3D3] hover:text-[#00712D]"
           >
             Prev
           </button>
@@ -92,7 +96,7 @@ const CharacterFeed: React.FC<{ episodeId: number | null }> = ({ episodeId }) =>
             <button
               key={pageIndex}
               onClick={() => handlePageChange(pageIndex + 1)}
-              className={`px-4 border ${currentPage === pageIndex + 1 ? 'bg-[#72BF78] text-[#FEFF9F]' : 'bg-[#FEFF9F] text-[#72BF78]'}`}
+              className={`px-4 border ${currentPage === pageIndex + 1 ? 'bg-[#00712D] text-[#DBD3D3]' : 'bg-[#DBD3D3] text-[#00712D]'}`}
             >
               {pageIndex + 1}
             </button>
@@ -100,7 +104,7 @@ const CharacterFeed: React.FC<{ episodeId: number | null }> = ({ episodeId }) =>
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === Math.ceil(characters.length / charactersPerPage)}
-            className="px-4 bg-[#72BF78] text-[#FEFF9F] rounded-r-lg hover:bg-[#D3EE98] hover:text-[#72BF78]"
+            className="px-4 bg-[#00712D] text-[#DBD3D3] rounded-r-lg duration-300 hover:bg-[#DBD3D3] hover:text-[#00712D]"
           >
             Next
           </button>
